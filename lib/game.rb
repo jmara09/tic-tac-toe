@@ -3,9 +3,9 @@ class Game
   attr_reader :board, :current_player
 
   def initialize(chr)
-    raise "Please choose between 'X' and 'O'" unless chr.upcase == 'X' || chr.upcase == 'O'
+    raise "Please choose between 'X' and 'O'" unless chr.downcase == 'x' || chr.downcase == 'o'
 
-    @current_player = chr.upcase
+    @current_player = chr.downcase
     @board = Array.new(9, '')
     @end = false
   end
@@ -14,23 +14,25 @@ class Game
     puts "Welcome! Let's play Tic-Tac-Toe. You can choose a location\n" \
          'from the board starting from upper left by choosing between 1-9'
     loop do
-      current_board
       player_input
+      win_or_tie(@board)
+      current_board(@board)
       break if @end == true
     end
   end
 
   private
 
-  def current_board
-    puts <<~BOARD
-      \nTIC TAC TOE\n
-         #{board[0]} | #{board[1]} | #{board[2]}
-      -------------
-         #{board[3]} | #{board[4]} | #{board[5]}
-      -------------
-         #{board[6]} | #{board[7]} | #{board[8]}\n
-    BOARD
+  def current_board(board)
+    arr = 0
+    (1..5).each do |num|
+      if num.odd?
+        puts " #{board[arr]} | #{board[arr + 1]} | #{board[arr + 2]} "
+        arr += 3
+      else
+        puts '-----------'
+      end
+    end
   end
 
   def player_input
@@ -53,16 +55,18 @@ class Game
       end
     end
 
-    @current_player =  @current_player == 'X' ? 'X' : 'O'
+    @current_player = @current_player == 'x' ? 'o' : 'x'
   end
 
-  def win_or_tie(@board)
+  def win_or_tie(board)
     WIN_COMBINATION.each do |combination|
       case board.values_at(*combination)
-      when %w(X X X)
+      when %w[X X X]
         puts "Congratulations! Player 'X' won."
-      when %w(O O O)
+        @end = true
+      when %w[O O O]
         puts "Congratulations! Player 'O' won."
+        @end = true
       end
     end
   end

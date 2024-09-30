@@ -4,14 +4,15 @@ class Game
 
   def initialize(chr)
     raise "Please choose between 'X' and 'O'" unless chr.upcase == 'X' || chr.upcase == 'O'
+
     @current_player = chr.upcase
     @board = Array.new(9, '')
     @end = false
   end
 
   def start
-    puts "Welcome! Let's play Tic-Tac-Toe. You can choose a location\n"\
-         "from the board starting from upper left by choosing between 1-9"
+    puts "Welcome! Let's play Tic-Tac-Toe. You can choose a location\n" \
+         'from the board starting from upper left by choosing between 1-9'
     loop do
       current_board
       player_input
@@ -41,26 +42,28 @@ class Game
         @end = true
         break
       end
-      
+
       if location.to_i.between?(1, 9) && @board[location.to_i - 1].empty?
         @board[location.to_i - 1] = current_player
         break
       elsif !@board[location.to_i - 1].empty?
-        puts "Location is taken. Please choose another"
+        puts 'Location is taken. Please choose another'
       elsif ('a'..'z').include?(location.downcase)
-        puts "Please choose from 1 to 9"
-      end  
+        puts 'Please choose from 1 to 9'
+      end
     end
-    
-    case
-    when @current_player == 'X'
-      @current_player = 'O'
-    else
-      @current_player = 'X'
-    end 
+
+    @current_player =  @current_player == 'X' ? 'X' : 'O'
   end
 
-  def win_or_tie
-    w
+  def win_or_tie(@board)
+    WIN_COMBINATION.each do |combination|
+      case board.values_at(*combination)
+      when %w(X X X)
+        puts "Congratulations! Player 'X' won."
+      when %w(O O O)
+        puts "Congratulations! Player 'O' won."
+      end
+    end
   end
 end

@@ -3,9 +3,9 @@ class Game
   attr_reader :board, :current_player
 
   def initialize(chr)
-    raise "Please choose between 'X' and 'O'" unless chr.downcase == 'x' || chr.downcase == 'o'
+    raise "Please choose between 'X' and 'O'" unless chr.upcase == 'X' || chr.upcase == 'O'
 
-    @current_player = chr.downcase
+    @current_player = chr.upcase
     @board = Array.new(9, '')
     @end = false
   end
@@ -15,9 +15,9 @@ class Game
          'from the board starting from upper left by choosing between 1-9'
     loop do
       player_input
-      win_or_tie(@board)
+      win?(@board)
       current_board(@board)
-      break if @end == true
+      break if @end == true || tie?(@board) == true
     end
   end
 
@@ -55,10 +55,10 @@ class Game
       end
     end
 
-    @current_player = @current_player == 'x' ? 'o' : 'x'
+    @current_player = @current_player == 'X' ? 'O' : 'X'
   end
 
-  def win_or_tie(board)
+  def win?(board)
     WIN_COMBINATION.each do |combination|
       case board.values_at(*combination)
       when %w[X X X]
@@ -69,5 +69,12 @@ class Game
         @end = true
       end
     end
+  end
+
+  def tie?(board)
+    arr = %w[X O]
+    is_tie = board.all? { |field| arr.include?(field) }
+    puts "It's a tie!" if is_tie
+    is_tie
   end
 end

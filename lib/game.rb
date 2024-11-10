@@ -21,8 +21,6 @@ class Game
     end
   end
 
-  private
-
   def current_board(board)
     arr = 0
     (1..5).each do |num|
